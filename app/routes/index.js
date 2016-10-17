@@ -1,7 +1,7 @@
-var ClickHandler = require(process.cwd() + '/app/controllers/clickHandler.server.js');
+var Logbook = require(process.cwd() + '/app/controllers/logbook.server.js');
 
 module.exports = function(app, db){
-	var clickHandler = new ClickHandler(db);
+	var logbook = new Logbook(db);
 
 	app.route('/')
 		.get(function(req, res){
@@ -9,7 +9,7 @@ module.exports = function(app, db){
 		});
 
 	app.route('/api/clicks')
-		.get(clickHandler.getClicks)
-		.post(clickHandler.addClick)
-		.delete(clickHandler.resetClicks);
+		.get(logbook)
+		.post(logbook)
+		.delete(logbook);
 };
