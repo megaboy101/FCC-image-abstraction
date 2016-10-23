@@ -1,52 +1,38 @@
+var googleIms = require('google-ims');
+var client = googleIms(process.env.CSE_ID, process.env.API_Key);
+
 function logbook(db){
+	// Database
 	var history = db.collection('history');
 
-	// this.getClicks = function(req, res){
-	// 	var clickProjection = {'_id': false};
-	//
-	// 	clicks.findOne({}, clickProjection, function(err, result){
-	// 		if (err) throw err;
-	//
-	// 		if (result) {
-	// 			res.json(result);
-	// 		}
-	// 		else {
-	// 			clicks.insert({"clicks": 0}, function(err){
-	// 				if (err) throw err;
-	//
-	// 				clicks.findOne({}, clickProjection, function(err, doc){
-	// 					if (err) throw err;
-	// 					res.json(doc);
-	// 				});
-	// 			});
-	// 		}
-	// 	});
-	// };
-	//
-	// this.addClick = function(req, res){
-	// 	clicks
-	// 		.findAndModify(
-	// 			{},
-	// 			{'_id': 1},
-	// 			{$inc: {'clicks': 1}},
-	// 			function(err, result){
-	// 				if (err) throw err;
-	// 				res.json(result);
-	// 			}
-	// 		);
-	// };
-	//
-	// this.resetClicks = function(req, res){
-	// 	clicks
-	// 		.update(
-	// 			{},
-	// 			{'clicks': 0},
-	// 			function(err, result){
-	// 				if (err) throw err;
-	// 				res.json(result);
-	// 			}
-	// 		);
-	// };
+	// Search a term and return results as a json object
+	this.search = function(req, res){
+		var query = req.params.query,
+			 offset = req.query.offset;
+
+		if (offset > 10){
+			offset = 10;
+		}
+
+		client.search(query, {page: offset})
+				.then(function(images){
+					var current = new Date();
+					history.insert({
+						"search": query,
+						"date": current
+					});
+
+					res.json(images);
+				});
+	};
+
+	// Show search history as a json object
+	this.showHistory = function(req, res){
+		history.find({}, {"_id": 0}).toArray(function(err, docs){
+			if (err) throw new Error("Couldn't query history");
+			res.send(docs);
+		});
+	};
 }
 
 module.exports = logbook;

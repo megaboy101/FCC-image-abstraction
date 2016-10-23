@@ -5,11 +5,13 @@ module.exports = function(app, db){
 
 	app.route('/')
 		.get(function(req, res){
-			res.sendFile(process.cwd() + '/public/html/index.html');
+			// res.sendFile(process.cwd() + '/public/html/index.html');
+			res.send("Do the api thing!");
 		});
 
-	app.route('/api/clicks')
-		.get(logbook)
-		.post(logbook)
-		.delete(logbook);
+	app.route('/api/search/:query')
+		.get(logbook.search);
+
+	app.route('/api/history')
+		.get(logbook.showHistory);
 };

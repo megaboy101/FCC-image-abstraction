@@ -4,7 +4,7 @@ var express = require('express'),
 
 var app = express();
 
-mongo.connect(process.env.Mongo_URI || "mongodb://megaboy101:thejacob1@ds017165.mlab.com:17165/image-abstraction", function(err, db){
+mongo.connect(process.env.Mongo_URI, function(err, db){
 	if (err) throw new Error("Failed to connect to database");
 	else {
 		console.log("MongoDB successfully connected to mLab");
